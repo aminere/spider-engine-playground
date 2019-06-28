@@ -1,19 +1,4 @@
 
-const postFxGroup = new spider.VisualGroup();
-
-const sceneRenderTarget = new spider.RenderTarget();
-
-// scene camera
-const sceneCamera = spider.Entities.create()
-    .setComponent(spider.Camera, {
-        excludedGroups: [postFxGroup],
-        renderTarget: sceneRenderTarget
-    })
-    .setComponent(spider.Transform, {
-        position: new spider.Vector3(0, 20, 0),
-        rotation: spider.Quaternion.fromEulerAngles(spider.MathEx.toRadians(-68), Math.PI, 0)
-    });
-
 // ASCII shader
 const asciiShader = new spider.Shader({
     vertexCode: `        
@@ -29,11 +14,9 @@ void main()
 }
     `,
     fragmentCode: `
-
 precision mediump float;
 
-uniform vec2 screenSize;
-
+uniform float blockSize;
 uniform sampler2D sceneTexture;
 uniform sampler2D char1;
 uniform sampler2D char2;
@@ -44,9 +27,9 @@ uniform sampler2D char6;
 uniform sampler2D char7;
 uniform sampler2D char8;
 
-varying vec2 vUv;
+uniform vec2 screenSize;
 
-const float blockSize = 20.;
+varying vec2 vUv;
 
 void main()
 {
@@ -69,18 +52,40 @@ void main()
     else if (luminosity < .7) charColor = texture2D(char7, localBlockCoord);
     else charColor = texture2D(char8, localBlockCoord);
     
-    gl_FragColor = vec4(sceneColor * (charColor.rgb), 1.);
+    gl_FragColor = vec4(sceneColor * charColor.rgb, 1.);
 }
     `
 });
 
-const fullScreenQuad = spider.Entities.create()
+const sceneRenderTarget = new spider.RenderTarget();
+const postFxGroup = new spider.VisualGroup();
+
+// scene camera
+spider.Entities.create()
+    .setComponent(spider.Camera, {
+        excludedGroups: [postFxGroup],
+        renderTarget: sceneRenderTarget
+    })
+    .setComponent(spider.Transform, {
+        position: new spider.Vector3(0, 20, 0),
+        rotation: spider.Quaternion.fromEulerAngles(spider.MathEx.toRadians(-68), Math.PI, 0)
+    });
+
+// full screen camera
+spider.Entities.create()
+    .setComponent(spider.Camera, {
+        includedGroups: [postFxGroup]
+    });
+
+// Full screen quad
+spider.Entities.create()
     .setComponent(spider.Visual, {
         geometry: new spider.CenteredQuad(),
         material: new spider.Material({
             shader: asciiShader,
             shaderParams: {
                 sceneTexture: sceneRenderTarget,
+                blockSize: 20,
                 char1: "Assets/ASCII/Characters/46.png",
                 char2: "Assets/ASCII/Characters/43.png",
                 char3: "Assets/ASCII/Characters/126.png",
@@ -94,14 +99,6 @@ const fullScreenQuad = spider.Entities.create()
         group: postFxGroup
     });
 
+// Load the scene
 spider.Assets.load("Assets/ASCII/Shooter.Prefab")
-    .then(shooter => {
-        spider.Entities.create({ prefab: shooter as spider.Prefab });
-
-
-        // full screen camera
-        spider.Entities.create()
-            .setComponent(spider.Camera, {
-                includedGroups: [postFxGroup]
-            });
-    });
+    .then(prefab => spider.Entities.create({ prefab: prefab as spider.Prefab }));
