@@ -50,7 +50,7 @@ void main()
     else if (luminosity < .7) charColor = texture2D(char7, localBlockCoord);
     else charColor = texture2D(char8, localBlockCoord);
     
-    gl_FragColor = vec4(sceneColor * charColor.rgb, 1.);
+    gl_FragColor = vec4((sceneColor * charColor.rgb) / clamp(luminosity, .01, 1.), 1.);
 }
     `
 });
