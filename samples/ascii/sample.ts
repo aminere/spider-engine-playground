@@ -33,10 +33,8 @@ varying vec2 vUv;
 
 void main()
 {
-    vec2 screenCoord = screenSize * vUv;
-    vec2 blockCoord = screenCoord / blockSize;
-    vec2 blockStart = vec2(floor(blockCoord.x), floor(blockCoord.y));    
-
+    vec2 blockCoord = vUv / (blockSize / screenSize);
+    vec2 blockStart = vec2(floor(blockCoord.x), floor(blockCoord.y));
     vec3 sceneColor = texture2D(sceneTexture, (blockStart * blockSize) / screenSize).rgb;
 
     vec4 charColor = vec4(0.);
