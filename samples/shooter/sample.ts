@@ -27,7 +27,7 @@ class Enemy extends spider.Component {
         --this._health;
         this.entity.findChild("Mesh")
             .getComponent(spider.AnimationComponent)
-            .playAnimation(0, false);
+            .playAnimation(0, { startTime: 0 });
 
         if (this._health <= 0) {
             this.entity.getComponent(spider.BehaviorComponent).sendSignal("explode");
@@ -73,7 +73,7 @@ class Player {
                     player
                         .findChild("Mesh")
                         .getComponent(spider.AnimationComponent)
-                        .playAnimation(0, false);
+                        .playAnimation(0, { startTime: 0 });
                 }
             }
         })
