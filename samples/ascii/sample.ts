@@ -61,7 +61,7 @@ const postFxGroup = new spider.VisualGroup();
 // scene camera
 spider.Entities.create()
     .setComponent(spider.Camera, {
-        excludedGroups: [postFxGroup],
+        filter: new spider.ExclusionVisualFilter([postFxGroup]),
         renderTarget: sceneRenderTarget
     })
     .setComponent(spider.Transform, {
@@ -72,7 +72,7 @@ spider.Entities.create()
 // full screen camera
 spider.Entities.create()
     .setComponent(spider.Camera, {
-        includedGroups: [postFxGroup]
+        filter: new spider.InclusionVisualFilter([postFxGroup])
     });
 
 // Full screen quad
