@@ -12,4 +12,6 @@ To contribute, simply make a pull request to this repo!
 
 Look at the `samples` directory for reference on what to submit.
 
-Please let me know if you have any issues!
+Happy coding!
+
+![Thumbnails](https://res.cloudinary.com/dpxheb148/image/upload/v1566568922/spiderengine/PlaygroundIncoming.png)
