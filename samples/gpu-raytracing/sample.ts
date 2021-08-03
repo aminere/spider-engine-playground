@@ -1,7 +1,7 @@
 
 const shader = new spider.Shader({
     vertexCode: `
-attribute vec3 position;
+in vec3 position;
 
 void main() {
     gl_Position = vec4(position, 1.0);
@@ -137,6 +137,7 @@ vec3 rotateX(in vec3 v, in float angle) {
     return vec3(v.x, y, z);
 }
 
+out vec4 fragColor;
 void main() {
 
     vec3 rayDirection = vec3(
@@ -158,7 +159,7 @@ void main() {
     );
 
     vec3 color = rayTrace(ray);
-    gl_FragColor = vec4(color, 1.);
+    fragColor = vec4(color, 1.);
 }
     `
 });
